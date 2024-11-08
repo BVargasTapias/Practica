@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+body{
+    background: rgb(161, 102, 201);
+}
+
+video {
+    width: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+header {
+    width: 100%;
+    height: 100px;
+    position: relative;
+    background-color: aliceblue;
+    display: flex;
+    
+}
+
+.container2 {
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 15%;
+   
+}
+
+
+.container1 {
+
+   justify-content: space-between;
+    align-items: center;
+    font-size: 33px;
+    margin-left: 75%;
+    margin-top: 25px;
+
+   
+}
+
+.sin-linea {
+    text-decoration: none;
+
+    
+}
+
+#inicio:hover{
+    background: #c3ace7;
+    opacity: 0.5;
+}
+
+#registro:hover{
+    background: #e6def3;
+    opacity: 0.5;
+}
+
+#logo {
+    width: 75px;
+    height: 85px;
+    margin-top: 2px;
+    margin-left: 20px;
+
+}
+
+#fondo1 {
+    width: 450px;
+    height: 120px;
+}
+
+#fondo2 {
+    width: 350px;
+    height: 45px;
+}
+
+p {
+    color: white;
+    font-size: 45px;
+}
+
+.container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: rgba(148, 15, 189, 0.726);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.titulo h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+select,
+input[type="text"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+select,
+input[type="number"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 60px;
+}
+
+#enviar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn {
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 60px;
+    text-decoration: none;
+}
+
+button:hover {
+    opacity: 0.8;
+   
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+p {
+    font-size: 16px;
+}
