@@ -25,3 +25,6 @@ INSERT INTO servicios_manzanas (FK_ID_Servicios, FK_ID_Manzanas) VALUES
 (7, 3);  -- Mantenimiento en Chapinero
 
 
+DELETE from usuario
+
+ALTER TABLE usuario AUTO_INCREMENT = 0;

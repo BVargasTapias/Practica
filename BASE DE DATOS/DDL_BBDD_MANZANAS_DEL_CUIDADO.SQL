@@ -31,21 +31,21 @@ CREATE TABLE Servicios_Manzanas (
     FOREIGN KEY (FK_ID_Manzanas) REFERENCES Manzanas(ID_Manzanas)
 )
 
- 
 
 CREATE TABLE Usuario (
     ID_Usuario INT AUTO_INCREMENT PRIMARY KEY,
-    Usu_TipoDocumento SET ('CC','TI'),
-    Usu_NumeroDocumento INT (10),
-    Usu_NombreCompleto VARCHAR (50),
-    Usu_Telefono VARCHAR (10),
-    Usu_CorreoElectronico VARCHAR (40),
-    Usu_Manzana SET ('Bosa','Chapinero','Suba'),
-    Usu_Direccion VARCHAR (20),
-    Usu_Ocupacion VARCHAR (30),
-    FK_ID_Manzanas INT (10),
+    Usu_TipoDocumento ENUM('CC', 'TI') NOT NULL,
+    Usu_NumeroDocumento INT(10) NOT NULL,
+    Usu_NombreCompleto VARCHAR(50) NOT NULL,
+    Usu_Telefono VARCHAR(10) NOT NULL,
+    Usu_CorreoElectronico VARCHAR(40) NOT NULL,
+    Usu_Manzana ENUM('Bosa', 'Chapinero', 'Suba') NOT NULL,
+    Usu_Direccion VARCHAR(100) NOT NULL,
+    Usu_Ocupacion VARCHAR(30) NOT NULL,
+    FK_ID_Manzanas INT,
     FOREIGN KEY (FK_ID_Manzanas) REFERENCES Manzanas (ID_Manzanas)
-)
+);
+
 
 -- Se crea tabla Solicitudes con llave foranea.
 
