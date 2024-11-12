@@ -22,8 +22,8 @@
             <h1>Bienvenidos,<span id="nombreUsuario"></span></h1>
 
         </div>
-        <form action="/obtener-servicios'" method="post">
-        </form>
+        <form id="formularioSeleccionDeServicio">
+        
             <!-- btn de desplegar servicios -->
 
             <button id="btndesplegarservicios">Menu de servicios </button>
@@ -31,14 +31,14 @@
             <div class="containerServicios"  id="containerServicios" style="display: none;">
                 <table class="form-table">
                     <tr>
-                        <td id="tablaServicios">Tabla de servicios</td>
+                        <td value ="hola" id="tablaServicios">Tabla de servicios</td>
                     </tr>
                     <tr>
                         <td id="listaServicios">Lista de Servicios</td>
                     </tr>
-                    
                 </table>
-                <button id="guardarServicios">Guarda Servicios</button>
+                <input type="date" id="fecha_hora">
+                <button type="submit"  id="guardarServicios">Guarda Servicios</button>
             </div>
 
 
@@ -51,7 +51,7 @@
 
             <button id="btncerrarsesion">Cerrar Sesión </button>
 
-        
+        </form>
     </div>   
 
 

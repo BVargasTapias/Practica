@@ -90,7 +90,11 @@ app.post('/sesion', async (req, res) => {
       //const [manzana] = conect.execute('SELECT manzanas.Man_Nombre FROM usuario INNER JOIN manzanas ON usuario.ID_Manzanas=manzanas  WHERE usuario.Usu_NombreCompleto=?', [datos[0].Usu_NombreCompleto]);
       req.session.usuario = datos[0].Usu_NombreCompleto
       req.session.Documento = documento
+      req.session.id = datos[0].ID_Usuario
       const usuario = { nombre: datos[0].Usu_NombreCompleto }
+      //console.log("idUsuario: ",datos[0].ID_Usuario);
+      
+      
       res.locals.usuario = usuario
       res.locals.Documento = documento
       res.sendFile(path.join(__dirname, '../front/usuario.html'))
@@ -128,11 +132,13 @@ app.post('/obtener-usuario', (req, res) => {
 //obtener servicios
 app.post('/obtener-servicios', async(req,res)=>{
   const usuario = req.session.usuario
+  console.log('coockie: ',req.session);
+
   try{
     const conect = await mysql2.createConnection(db)
-    const [datos] = await conect.execute('SELECT servicios.Ser_Nombre FROM servicios INNER JOIN servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON     manzanas.ID_Manzanas = servicios_manzanas.FK_ID_Manzanas INNER JOIN usuario ON   manzanas.ID_Manzanas = usuario.FK_ID_Manzanas WHERE usuario.Usu_NombreCompleto =?', [usuario])
+    const [datos] = await conect.execute('SELECT servicios.Ser_Nombre, servicios.ID_Servicios FROM servicios INNER JOIN servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON     manzanas.ID_Manzanas = servicios_manzanas.FK_ID_Manzanas INNER JOIN usuario ON   manzanas.ID_Manzanas = usuario.FK_ID_Manzanas WHERE usuario.Usu_NombreCompleto =?', [usuario])
     console.log (datos)
-    res.json({servicios: datos.map(hijo=>hijo.Ser_Nombre)})
+    res.json(datos)
     await conect.end()
   }
   catch(error){
@@ -141,6 +147,30 @@ app.post('/obtener-servicios', async(req,res)=>{
   }
 })
 
+app.post('/guardar-servicios', async (req, res) => {
+  try {
+    const usuario = req.session.usuario
+    const documento = req.session.Documento
+    const {servicios,fecha_hora} = req.body
+    const conect = await mysql2.createConnection(db) 
+    const [datos] = await conect.execute('SELECT * FROM usuario where Usu_NombreCompleto = ?', [usuario])
+  
+    servicios.forEach(async (idServicios) => {
+      
+      await conect.execute('INSERT INTO solicitudes (FK_ID_Usuario, Sol_Servicio, Sol_FechaHora) VALUES (?, ?, ?)', [datos[0].ID_Usuario, idServicios, fecha_hora])
+      
+    });
+    
+
+    res.json({
+      idServicios: servicios,
+      idUsuario: datos[0].ID_Usuario
+    })
+  } catch (error) {
+    console.error('Error en el servidor: ', error);
+    res.status(500).send('Error en el servidor');
+  }
+})
 
 //Apertura del servidor
 app.listen(3000, () => {
