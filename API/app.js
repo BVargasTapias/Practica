@@ -153,11 +153,11 @@ app.post('/guardar-servicios', async (req, res) => {
     const documento = req.session.Documento
     const {servicios,fecha_hora} = req.body
     const conect = await mysql2.createConnection(db) 
-    const [datos] = await conect.execute('SELECT * FROM usuario where Usu_NombreCompleto = ?', [usuario])
+    const [datos] = await conect.execute('SELECT ID_Usuario FROM usuario where Usu_NombreCompleto = ?', [usuario])
   
     servicios.forEach(async (idServicios) => {
       
-      await conect.execute('INSERT INTO solicitudes (FK_ID_Usuario, Sol_Servicio, Sol_FechaHora) VALUES (?, ?, ?)', [datos[0].ID_Usuario, idServicios, fecha_hora])
+      await conect.execute('INSERT INTO solicitudes (FK_ID_Usuario, Sol_CodigoServicio, Sol_FechaHora) VALUES (?, ?, ?)', [datos[0].ID_Usuario, idServicios, fecha_hora])
       
     });
     
@@ -171,6 +171,43 @@ app.post('/guardar-servicios', async (req, res) => {
     res.status(500).send('Error en el servidor');
   }
 })
+
+
+//DESPLEGAR SERVICIOS GUARDADOS
+app.post('/obtener-servicios-guardados', async (req, res) =>{
+  const usuario = req.session.usuario;
+  const Documento = req.session.Documento
+  
+  try {
+    const conect = await mysql2.createConnection(db);
+    const [IDUsuario] = await conect.execute ('SELECT ID_Usuario FROM usuario where Usu_NombreCompleto = ?', [usuario]);
+
+    const [serviciosGuardadosData] = await conect.execute ('SELECT servicios.Ser_Nombre, Solicitudes.Sol_FechaHora, Solicitudes.ID_Solicitudes FROM servicios INNER JOIN  servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON servicios_manzanas.FK_ID_Manzanas = manzanas.ID_Manzanas INNER JOIN usuario ON manzanas.ID_Manzanas = usuario.FK_ID_Manzanas INNER JOIN solicitudes ON usuario.ID_Usuario = solicitudes.FK_ID_Usuario WHERE solicitudes.FK_ID_Usuario = ? AND servicios.ID_Servicios = solicitudes.Sol_CodigoServicio;', [IDUsuario[0].ID_Usuario]);
+    const serviciosGuardadosFiltardos = serviciosGuardadosData.map(servicio =>({
+      Nombre: servicio.Ser_Nombre,
+      Fecha: servicio.Sol_FechaHora,
+      ID: servicio.ID_Solicitudes
+    }))
+    res.json({serviciosGuardados: serviciosGuardadosFiltardos})
+    await conect.end();
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).send('Error en el servidor')
+  }
+})
+
+app.post('/manzanas', async (req, res) => {
+  try {
+    const conect = await mysql2.createConnection(db);
+    const [tiposServicios] = await conect.execute('SELECT ID_Manzanas, Man_Nombre FROM manzanas');
+    res.json(tiposServicios);
+    console.log(tiposServicios);
+    await conect.end();
+  } catch (error) {
+    console.error('Error al obtener tipos de servicios:', error);
+    res.status(500).send('Error al obtener tipos de servicios');
+  }
+});
 
 //Apertura del servidor
 app.listen(3000, () => {

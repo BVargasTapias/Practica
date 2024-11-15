@@ -23,22 +23,22 @@
 
         </div>
         <form id="formularioSeleccionDeServicio">
-        
+
             <!-- btn de desplegar servicios -->
 
             <button id="btndesplegarservicios">Menu de servicios </button>
 
-            <div class="containerServicios"  id="containerServicios" style="display: none;">
+            <div class="containerServicios" id="containerServicios" style="display: none;">
                 <table class="form-table">
                     <tr>
-                        <td value ="hola" id="tablaServicios">Tabla de servicios</td>
+                        <td value="hola" id="tablaServicios">Tabla de servicios</td>
                     </tr>
                     <tr>
                         <td id="listaServicios">Lista de Servicios</td>
                     </tr>
                 </table>
                 <input type="date" id="fecha_hora">
-                <button type="submit"  id="guardarServicios">Guarda Servicios</button>
+                <button type="submit" id="guardarServicios">Guarda Servicios</button>
             </div>
 
 
@@ -46,13 +46,26 @@
 
             <button id="btnserviciosguardados">Servicios Guardados </button>
 
+            <div id="servicios-guardados-container" style="display: none">
+                <table id="tabla-servicios-guardados">
+                    <h2>Servicios Guardados</h2>
+                    <thead>
+                        <tr>
+                            <th>Servicio Reservado</th>
+                            <th>Fecha Reserva</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-servicios-guardados"></tbody>
+                </table>
+            </div>
+
 
             <!-- Botón para cerrar sesión -->
 
             <button id="btncerrarsesion">Cerrar Sesión </button>
 
         </form>
-    </div>   
+    </div>
 
 
 </body>

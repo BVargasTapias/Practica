@@ -10,7 +10,8 @@ INSERT INTO Servicios (Ser_Nombre, Ser_Descripcion) VALUES
 INSERT INTO Manzanas (Man_Nombre, Man_Direccion) VALUES
 ('Bosa', 'Calle Falsa 123'),
 ('Suba', 'Avenida Principal 456'),
-('Chapinero', 'Boulevard de la Paz 789');
+('Chapinero', 'Boulevard de la Paz 789'),
+('Soacha', 'se logro');
 
 INSERT INTO servicios_manzanas (FK_ID_Servicios, FK_ID_Manzanas) VALUES
 (1, 1),  -- Limpieza en Bosa
@@ -28,3 +29,11 @@ INSERT INTO servicios_manzanas (FK_ID_Servicios, FK_ID_Manzanas) VALUES
 DELETE from usuario
 
 ALTER TABLE usuario AUTO_INCREMENT = 0;
+
+SELECT servicios.Ser_Nombre, Solicitudes.Sol_FechaHora, Solicitudes.ID_Solicitudes FROM servicios INNER JOIN  servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON servicios_manzanas.FK_ID_Manzanas = manzanas.ID_Manzanas INNER JOIN usuario ON manzanas.ID_Manzanas = usuario.FK_ID_Manzanas INNER JOIN solicitudes ON usuario.ID_Usuario = solicitudes.FK_ID_Usuario WHERE solicitudes.FK_ID_Usuario = 1 AND servicios.ID_Servicios = solicitudes.Sol_CodigoServicio;
+
+INSERT INTO Manzanas (Man_Nombre, Man_Direccion) 
+VALUES 
+    ('Manzana A', 'Calle 1'),
+    ('Manzana B', 'Calle 2'),
+    ('Manzana C', 'Calle 3');

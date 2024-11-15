@@ -10,7 +10,7 @@ CREATE DATABASE BBDD_Manzanas_Del_Cuidado
 
 CREATE TABLE Manzanas (
     ID_Manzanas INT AUTO_INCREMENT PRIMARY KEY,
-    Man_Nombre ENUM ('Bosa', 'Suba', 'Chapinero'),
+    Man_Nombre VARCHAR(20),
     Man_Direccion VARCHAR (20)
 )
 
@@ -37,9 +37,9 @@ CREATE TABLE Usuario (
     Usu_TipoDocumento ENUM('CC', 'TI') NOT NULL,
     Usu_NumeroDocumento INT(10) NOT NULL,
     Usu_NombreCompleto VARCHAR(50) NOT NULL,
+    Usu_Rol VARCHAR (20),
     Usu_Telefono VARCHAR(10) NOT NULL,
     Usu_CorreoElectronico VARCHAR(40) NOT NULL,
-    Usu_Manzana ENUM('Bosa', 'Chapinero', 'Suba') NOT NULL,
     Usu_Direccion VARCHAR(100) NOT NULL,
     Usu_Ocupacion VARCHAR(30) NOT NULL,
     FK_ID_Manzanas INT,
@@ -51,8 +51,7 @@ CREATE TABLE Usuario (
 
 CREATE TABLE Solicitudes (
     ID_Solicitudes INT AUTO_INCREMENT PRIMARY KEY,
-    Sol_Establecimiento VARCHAR (20),
-    Sol_Servicio VARCHAR (20),
+    Sol_CodigoServicio VARCHAR (20),
     Sol_FechaHora DATETIME,
     FK_ID_Usuario INT (10),
     FOREIGN KEY (FK_ID_Usuario) REFERENCES Usuario (ID_Usuario)
@@ -67,3 +66,5 @@ INNER JOIN manzanas ON usuario.ID_Manzanas=ID_Manzanas
 WHERE usuario.Usu_NombreCompleto=?
 
 SELECT servicios.ID_Servicios FROM servicios WHERE servicios.Ser_Nombre = "electricidad"
+
+SELECT ID_Manzanas, Man_Nombre FROM manzanas

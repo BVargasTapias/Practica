@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <link rel="stylesheet" href="./CSS/styles.css">
+
 </head>
 
 <body>
@@ -25,22 +26,22 @@
 
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
-    
-            <label for="Tipo de Documento">Tipo de Documento</label>
+
+            <label for="tipodedocumento">Tipo de Documento</label>
             <select name="tipodedocumento" id="tipodedocumento" required>
                 <option value="TI">TI</option>
                 <option value="CC">CC</option>
             </select>
-    
+
             <label for="documento">Documento:</label>
             <input type="text" id="documento" name="documento" placeholder="Documento" required>
-    
+
             <label for="manzana">Manzana</label>
             <select name="manzana" id="manzana" required>
-                <option value="1">Bosa</option>
-                <option value="2">Suba</option>
-                <option value="3">Chapinero</option>
+                <option value="">Seleccione una manzana...</option>
             </select>
+
+
             <label for="telefono">Numero de Telefono</label>
             <input type="text" id="telefono" name="telefono" placeholder="Numero de Telefono" required>
             <label for="correo">Correo Electronico</label>
@@ -55,8 +56,48 @@
 
     </div>
 
-    
 
+
+
+    <script>
+        const selectManzana = document.getElementById("manzana");
+
+        selectManzana.addEventListener("click", function () {
+            console.log("Se le dio click al select");
+            if (selectManzana.options.length > 1) {
+                return;  // Ya se cargaron los datos, no hacemos otra solicitud
+            }
+
+            const xhrManzanas = new XMLHttpRequest();
+            xhrManzanas.open("post", "/manzanas", true);
+            xhrManzanas.onreadystatechange = function () {
+                if (xhrManzanas.readyState === 4) {
+                    if (xhrManzanas.status === 200) {
+                        const manzanas = JSON.parse(xhrManzanas.responseText);
+                        console.log(manzanas);
+                        selectManzana.innerHTML = ""; // Limpiar las opciones anteriores
+
+                        // Crear un elemento de opción por cada manzana que llega
+                        const defaultOption = document.createElement("option");
+                        defaultOption.value = "";
+                        defaultOption.textContent = "Seleccione una manzana";
+                        selectManzana.appendChild(defaultOption);
+
+                        manzanas.forEach((manzana) => {
+                            const option = document.createElement("option");
+                            option.value = manzana.ID_Manzanas;
+                            option.textContent = manzana.Man_Nombre;
+                            selectManzana.appendChild(option);
+                        });
+                    } else {
+                        console.error("No se pudieron cargar las manzanas desde la base de datos");
+                    }
+                }
+            };
+            xhrManzanas.send();
+        });
+
+    </script>
 </body>
 
 </html>

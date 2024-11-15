@@ -66,26 +66,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const formularioSeleccionDeServicio = document.getElementById(
     "formularioSeleccionDeServicio"
   );
-  
+
   formularioSeleccionDeServicio.addEventListener("submit", async (event) => {
     event.preventDefault();
-  
+
     // Recopilar servicios seleccionados
     const serviciosSeleccionados = Array.from(
       formularioSeleccionDeServicio.elements["servicios"]
     )
       .filter((checkbox) => checkbox.checked)
       .map((checkbox) => checkbox.value);
-  
+
     // Obtener fecha y hora
     const fh = formularioSeleccionDeServicio.elements["fecha_hora"].value;
-  
+
     // Validar datos antes de enviar
     if (serviciosSeleccionados.length === 0 || !fh) {
       alert("Debe seleccionar al menos un servicio y especificar una fecha y hora.");
       return;
     }
-  
+
     try {
       // Realizar la solicitud POST
       const response = await fetch("guardar-servicios", {
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
           fecha_hora: fh,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -114,5 +114,53 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Ocurrió un error al procesar la solicitud. Intente más tarde.");
     }
   });
+
+  //Evento para enviar los servicios guardados
+  const btnServiciosGuardados = document.getElementById(
+    "btnserviciosguardados"
+  );
+  const serviciosGuardadosContainer = document.getElementById(
+    "servicios-guardados-container"
+  );
+  const listaServiciosGuardados = document.getElementById(
+    "lista-servicios-guardados"
+  );
+  btnServiciosGuardados.addEventListener("click", () => {
+    console.log('se dio click al boton');
+    const xhrobtenerServiciosGuardados = new XMLHttpRequest();
+    xhrobtenerServiciosGuardados.open(
+      "post",
+      "/obtener-servicios-guardados",
+      true
+    );
+    xhrobtenerServiciosGuardados.onreadystatechange = function () {
+      if (
+        xhrobtenerServiciosGuardados.readyState === 4 &&
+        xhrobtenerServiciosGuardados.status === 200
+      ) {
+        const data = JSON.parse(xhrobtenerServiciosGuardados.responseText);
+        listaServiciosGuardados.innerHTML = data.serviciosGuardados
+          .map(
+            (servicio) => `
+          
+          <tr>
+      <td>${servicio.Nombre}</td>
+      <td>${servicio.Fecha}</td>
+      <td><button onclick="eliminarServicio(${servicio.ID})">Eliminar</button></td>
+      </tr>
+          
+          `
+          )
+          .join('');
+        serviciosGuardadosContainer.style.display = "block";
+      } else {
+        console.error("Error al obtener servicios guardados");
+      }
+    };
+    xhrobtenerServiciosGuardados.send();
+  });
+
   
+  
+
 });
