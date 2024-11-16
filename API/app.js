@@ -209,6 +209,27 @@ app.post('/manzanas', async (req, res) => {
   }
 });
 
+
+app.delete ('/eliminar-servicio/:ID', async (req, res) =>{
+const solicitudID = req.params.ID;
+console.log(req.params);
+
+try {
+  const conect = await mysql2.createConnection(db)
+  await conect.execute ('DELETE FROM Solicitudes WHERE ID_Solicitudes =?', [solicitudID])
+    res.send().status(200)
+    await conect.end();
+  
+} catch (error) {
+  console.error('Error al eliminar la solicitud:', error);
+    res.status(500).send('Error al eliminar la solicitud');
+}
+})
+
+
+
+
+
 //Apertura del servidor
 app.listen(3000, () => {
   console.log(`Servidor Node.js escuchando`);

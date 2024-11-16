@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "lista-servicios-guardados"
   );
   btnServiciosGuardados.addEventListener("click", () => {
-    console.log('se dio click al boton');
+   
     const xhrobtenerServiciosGuardados = new XMLHttpRequest();
     xhrobtenerServiciosGuardados.open(
       "post",
@@ -164,3 +164,26 @@ document.addEventListener("DOMContentLoaded", () => {
   
 
 });
+
+function eliminarServicio (ID) {
+  const xhrEliminarServicio = new XMLHttpRequest();
+    xhrEliminarServicio.open(
+      "delete",
+      `/eliminar-servicio/${ID}`, 
+      true
+    );
+    xhrEliminarServicio.setRequestHeader('Content-Type', 'application/json');
+    xhrEliminarServicio.onreadystatechange = function () {
+      if (
+        xhrEliminarServicio.readyState === 4){
+          if(xhrEliminarServicio.status === 200){
+            alert("Solicitud Eliminada");
+            window.location.reload();
+          }        
+      
+        } else {
+        console.error("Error al eliminar solicitud");
+      }
+    };
+    xhrEliminarServicio.send();
+}

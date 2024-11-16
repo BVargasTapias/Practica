@@ -37,3 +37,5 @@ VALUES
     ('Manzana A', 'Calle 1'),
     ('Manzana B', 'Calle 2'),
     ('Manzana C', 'Calle 3');
+
+DELETE FROM MANZANAS WHERE Man_Nombre = 'Manzana C'
