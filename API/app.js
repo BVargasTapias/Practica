@@ -227,6 +227,19 @@ try {
 })
 
 
+// Cerrar sesion
+app.post('/cerrar-sesion', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error al cerrar sesión:', err);
+      res.status(500).send('Error al cerrar sesión');
+    } else {
+      res.status(200).send('Sesión cerrada con éxito');
+    }
+  });
+});
+
+
 
 
 

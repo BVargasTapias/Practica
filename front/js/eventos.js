@@ -161,6 +161,27 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   
+  // Cerrar sesion
+const btnCerrarSesion = document.getElementById("btncerrarsesion");
+
+btnCerrarSesion.addEventListener("click", async () => {
+  try {
+    const response = await fetch("/cerrar-sesion", {
+      method: "POST",
+    });
+
+    if (response.ok) {
+      alert("Sesión cerrada con éxito.");
+      window.location.href = "./inicio.html"; 
+    } else {
+      alert("Error al cerrar la sesión. Intente de nuevo.");
+    }
+  } catch (error) {
+    console.error("Error al cerrar la sesión:", error);
+    alert("Ocurrió un error. Intente más tarde.");
+  }
+});
+
   
 
 });
