@@ -92,12 +92,23 @@ app.post('/sesion', async (req, res) => {
       req.session.Documento = documento
       req.session.id = datos[0].ID_Usuario
       const usuario = { nombre: datos[0].Usu_NombreCompleto }
+      const rolUsuario = datos[0].Usu_Rol
       //console.log("idUsuario: ",datos[0].ID_Usuario);
-      
-      
+
+
       res.locals.usuario = usuario
       res.locals.Documento = documento
-      res.sendFile(path.join(__dirname, '../front/usuario.html'))
+      switch (rolUsuario) {
+        case "Administrador":
+          res.sendFile(path.join(__dirname, '../front/administrador.html'))
+          break;
+        case "Usuario":
+          res.sendFile(path.join(__dirname, '../front/usuario.html'))
+          break;
+        default:
+          break;
+      }
+      //res.sendFile(path.join(__dirname, '../front/usuario.html'))
       await conect.end()
     }
     else {
@@ -130,18 +141,18 @@ app.post('/obtener-usuario', (req, res) => {
 
 
 //obtener servicios
-app.post('/obtener-servicios', async(req,res)=>{
+app.post('/obtener-servicios', async (req, res) => {
   const usuario = req.session.usuario
-  console.log('coockie: ',req.session);
+  console.log('coockie: ', req.session);
 
-  try{
+  try {
     const conect = await mysql2.createConnection(db)
     const [datos] = await conect.execute('SELECT servicios.Ser_Nombre, servicios.ID_Servicios FROM servicios INNER JOIN servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON     manzanas.ID_Manzanas = servicios_manzanas.FK_ID_Manzanas INNER JOIN usuario ON   manzanas.ID_Manzanas = usuario.FK_ID_Manzanas WHERE usuario.Usu_NombreCompleto =?', [usuario])
-    console.log (datos)
+    console.log(datos)
     res.json(datos)
     await conect.end()
   }
-  catch(error){
+  catch (error) {
     console.error('Error en el servidor: ', error);
     res.status(500).send('Error en el servidor');
   }
@@ -151,16 +162,16 @@ app.post('/guardar-servicios', async (req, res) => {
   try {
     const usuario = req.session.usuario
     const documento = req.session.Documento
-    const {servicios,fecha_hora} = req.body
-    const conect = await mysql2.createConnection(db) 
+    const { servicios, fecha_hora } = req.body
+    const conect = await mysql2.createConnection(db)
     const [datos] = await conect.execute('SELECT ID_Usuario FROM usuario where Usu_NombreCompleto = ?', [usuario])
-  
+
     servicios.forEach(async (idServicios) => {
-      
+
       await conect.execute('INSERT INTO solicitudes (FK_ID_Usuario, Sol_CodigoServicio, Sol_FechaHora) VALUES (?, ?, ?)', [datos[0].ID_Usuario, idServicios, fecha_hora])
-      
+
     });
-    
+
 
     res.json({
       idServicios: servicios,
@@ -174,21 +185,21 @@ app.post('/guardar-servicios', async (req, res) => {
 
 
 //DESPLEGAR SERVICIOS GUARDADOS
-app.post('/obtener-servicios-guardados', async (req, res) =>{
+app.post('/obtener-servicios-guardados', async (req, res) => {
   const usuario = req.session.usuario;
   const Documento = req.session.Documento
-  
+
   try {
     const conect = await mysql2.createConnection(db);
-    const [IDUsuario] = await conect.execute ('SELECT ID_Usuario FROM usuario where Usu_NombreCompleto = ?', [usuario]);
+    const [IDUsuario] = await conect.execute('SELECT ID_Usuario FROM usuario where Usu_NombreCompleto = ?', [usuario]);
 
-    const [serviciosGuardadosData] = await conect.execute ('SELECT servicios.Ser_Nombre, Solicitudes.Sol_FechaHora, Solicitudes.ID_Solicitudes FROM servicios INNER JOIN  servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON servicios_manzanas.FK_ID_Manzanas = manzanas.ID_Manzanas INNER JOIN usuario ON manzanas.ID_Manzanas = usuario.FK_ID_Manzanas INNER JOIN solicitudes ON usuario.ID_Usuario = solicitudes.FK_ID_Usuario WHERE solicitudes.FK_ID_Usuario = ? AND servicios.ID_Servicios = solicitudes.Sol_CodigoServicio;', [IDUsuario[0].ID_Usuario]);
-    const serviciosGuardadosFiltardos = serviciosGuardadosData.map(servicio =>({
+    const [serviciosGuardadosData] = await conect.execute('SELECT servicios.Ser_Nombre, Solicitudes.Sol_FechaHora, Solicitudes.ID_Solicitudes FROM servicios INNER JOIN  servicios_manzanas ON servicios_manzanas.FK_ID_Servicios = servicios.ID_Servicios INNER JOIN manzanas ON servicios_manzanas.FK_ID_Manzanas = manzanas.ID_Manzanas INNER JOIN usuario ON manzanas.ID_Manzanas = usuario.FK_ID_Manzanas INNER JOIN solicitudes ON usuario.ID_Usuario = solicitudes.FK_ID_Usuario WHERE solicitudes.FK_ID_Usuario = ? AND servicios.ID_Servicios = solicitudes.Sol_CodigoServicio;', [IDUsuario[0].ID_Usuario]);
+    const serviciosGuardadosFiltardos = serviciosGuardadosData.map(servicio => ({
       Nombre: servicio.Ser_Nombre,
       Fecha: servicio.Sol_FechaHora,
       ID: servicio.ID_Solicitudes
     }))
-    res.json({serviciosGuardados: serviciosGuardadosFiltardos})
+    res.json({ serviciosGuardados: serviciosGuardadosFiltardos })
     await conect.end();
   } catch (error) {
     console.error('Error en el servidor:', error);
@@ -210,20 +221,20 @@ app.post('/manzanas', async (req, res) => {
 });
 
 
-app.delete ('/eliminar-servicio/:ID', async (req, res) =>{
-const solicitudID = req.params.ID;
-console.log(req.params);
+app.delete('/eliminar-servicio/:ID', async (req, res) => {
+  const solicitudID = req.params.ID;
+  console.log(req.params);
 
-try {
-  const conect = await mysql2.createConnection(db)
-  await conect.execute ('DELETE FROM Solicitudes WHERE ID_Solicitudes =?', [solicitudID])
+  try {
+    const conect = await mysql2.createConnection(db)
+    await conect.execute('DELETE FROM Solicitudes WHERE ID_Solicitudes =?', [solicitudID])
     res.send().status(200)
     await conect.end();
-  
-} catch (error) {
-  console.error('Error al eliminar la solicitud:', error);
+
+  } catch (error) {
+    console.error('Error al eliminar la solicitud:', error);
     res.status(500).send('Error al eliminar la solicitud');
-}
+  }
 })
 
 
