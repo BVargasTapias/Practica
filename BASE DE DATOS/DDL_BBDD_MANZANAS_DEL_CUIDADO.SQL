@@ -37,7 +37,7 @@ CREATE TABLE Usuario (
     Usu_TipoDocumento ENUM('CC', 'TI') NOT NULL,
     Usu_NumeroDocumento INT(10) NOT NULL,
     Usu_NombreCompleto VARCHAR(50) NOT NULL,
-    Usu_Rol VARCHAR (20),
+    Usu_Rol ENUM('Administrador', 'Usuario') NOT NULL,
     Usu_Telefono VARCHAR(10) NOT NULL,
     Usu_CorreoElectronico VARCHAR(40) NOT NULL,
     Usu_Direccion VARCHAR(100) NOT NULL,
