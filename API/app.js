@@ -105,6 +105,18 @@ app.post('/sesion', async (req, res) => {
         case "Usuario":
           res.sendFile(path.join(__dirname, '../front/usuario.html'))
           break;
+
+        case null:
+
+          res.sendFile(path.join(__dirname, '../front/usuario.html'))
+          /*await conect.execute(`SELECT * FROM Usuario WHERE Usu_NumeroDocumento=? AND Usu_TipoDocumento=?`, [documento, tipodedocumento])
+          res.status(201).send(`<script>
+            window.onload = function(){
+                alert("Comuniquese con el administrador para asignar rol.")
+                window.location.href = './inicio.html'
+            }
+        </script>`)*/
+          break;
         default:
           break;
       }
