@@ -54,3 +54,7 @@ VALUES
 DELETE FROM usuario;
 
 SELECT Usu_NumeroDocumento FROM Usuario WHERE Usu_NumeroDocumento IN (1234567890, 9876543210, 1122334455, 5566778899, 9988776655);
+
+
+INSERT INTO Manzanas (Man_Nombre, Man_Direccion) VALUES
+('Soacha', 'Calle Falsa 124'),
