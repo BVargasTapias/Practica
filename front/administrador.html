@@ -24,18 +24,30 @@
             <!-- Botón para gestionar usuarios -->
             <button id="btnUsuarios">Usuarios</button>
 
-            <div class="containerUsuarios" id="containerUsuarios" style="display: none;">
+            <div class="containerUsuarios" id="containerUsuarios">
                 <h2>Gestión de Usuarios</h2>
                 <table class="form-table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Nombre</th>
-                            <th>Correo Electrónico</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="listaUsuarios"></tbody>
+                    <tbody id="listaUsuarios">
+                        <!-- Ejemplo de un usuario -->
+                        <tr>
+                            <td>1</td>
+                            <td>Juan Pérez</td>
+                            <td>
+                                <button>Modificar</button>
+                                <button>Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
+            
 
             <!-- Botón para gestionar servicios -->
             <button id="btnServicios">Servicios</button>

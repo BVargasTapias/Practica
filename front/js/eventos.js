@@ -208,3 +208,42 @@ function eliminarServicio (ID) {
     };
     xhrEliminarServicio.send();
 }
+
+
+const selectManzana = document.getElementById("manzana");
+
+selectManzana.addEventListener("click", function () {
+    console.log("Se le dio click al select");
+    if (selectManzana.options.length > 1) {
+        return;  // Ya se cargaron los datos, no hacemos otra solicitud
+    }
+
+    const xhrManzanas = new XMLHttpRequest();
+    xhrManzanas.open("post", "/manzanas", true);
+    xhrManzanas.onreadystatechange = function () {
+        if (xhrManzanas.readyState === 4) {
+            if (xhrManzanas.status === 200) {
+                const manzanas = JSON.parse(xhrManzanas.responseText);
+                console.log(manzanas);
+                selectManzana.innerHTML = ""; // Limpiar las opciones anteriores
+
+                // Crear un elemento de opción por cada manzana que llega
+                const defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.textContent = "Seleccione una manzana";
+                selectManzana.appendChild(defaultOption);
+
+                manzanas.forEach((manzana) => {
+                    const option = document.createElement("option");
+                    option.value = manzana.ID_Manzanas;
+                    option.textContent = manzana.Man_Nombre;
+                    selectManzana.appendChild(option);
+                });
+            } else {
+                console.error("No se pudieron cargar las manzanas desde la base de datos");
+            }
+        }
+    };
+    xhrManzanas.send();
+});
+
