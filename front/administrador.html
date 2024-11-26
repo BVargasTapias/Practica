@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MANZANA DEL CUIDADO</title>
     <link rel="stylesheet" href="./CSS/styles.css">
-    <script src="./js/administrador.js"></script>
+ 
     <script src="./js/jquery.easing.1.3.js"></script>
     <script src="./js/jquery-3.7.1.min.js"></script>
 </head>
@@ -19,34 +19,65 @@
             <h1>Bienvenidos, <span id="nombreUsuario"></span></h1>
         </div>
 
-        <form id="formularioPrincipal">
+  
 
             <!-- Botón para gestionar usuarios -->
             <button id="btnUsuarios">Usuarios</button>
 
-            <div class="containerUsuarios" id="containerUsuarios">
+            <div class="containerUsuarios" id="containerUsuarios" style="display: none;">
                 <h2>Gestión de Usuarios</h2>
                 <table class="form-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="listaUsuarios">
-                        <!-- Ejemplo de un usuario -->
-                        <tr>
-                            <td>1</td>
-                            <td>Juan Pérez</td>
-                            <td>
-                                <button>Modificar</button>
-                                <button>Eliminar</button>
-                            </td>
-                        </tr>
+                    
                     </tbody>
                 </table>
+            </div>   
+            
+            <div class="containermodificar" id="containermodificar" style="display: none;">
+                <h2>Actualizar Datos</h2>
+                <form id="formModificar">
+                    <table class="form-table">
+                        <tr>
+                            <td><label for="nombre">Nombre:</label></td>
+                            <td><input type="text" id="nombre" name="nombre" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="email">Correo:</label></td>
+                            <td><input type="email" id="email" name="email" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="rol">Rol:</label></td>
+                            <td><input type="text" id="rol" name="rol" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="telefono">Teléfono:</label></td>
+                            <td><input type="tel" id="telefono" name="telefono" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="direccion">Dirección:</label></td>
+                            <td><input type="text" id="direccion" name="direccion"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="ocupacion">Ocupación:</label></td>
+                            <td><input type="text" id="ocupacion" name="ocupacion"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">
+                                <button type="button" id="btnGuardarCambios">Guardar Cambios</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
+            
+            
+            
             
 
             <!-- Botón para gestionar servicios -->
@@ -66,6 +97,8 @@
                 <button type="submit" id="guardarServicios">Guardar Servicios</button>
             </div>
 
+
+
             <!-- Botón para crear manzana -->
             <button id="btnCrearManzana">Crear Manzana</button>
 
@@ -73,10 +106,10 @@
                 <h2>Crear Manzana</h2>
                 <form id="formularioCrearManzana">
                     <label for="nombreManzana">Nombre de la Manzana:</label>
-                    <input type="text" id="nombreManzana" required>
+                    <input type="text" id="nombreManzana" >
 
                     <label for="ubicacion">Ubicación:</label>
-                    <input type="text" id="ubicacion" required>
+                    <input type="text" id="ubicacion" >
 
                     <button type="submit" id="guardarManzana">Guardar Manzana</button>
                 </form>
@@ -85,8 +118,10 @@
             <!-- Botón para cerrar sesión -->
             <button id="btnCerrarSesion">Cerrar Sesión</button>
 
-        </form>
+     
     </div>
+
+    <script src="./js/administrador.js"></script>
 </body>
 
 </html>

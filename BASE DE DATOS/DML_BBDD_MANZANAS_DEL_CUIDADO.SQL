@@ -49,7 +49,25 @@ VALUES
 ('TI', 987654325, 'Ana Gómez', 'Usuario', '3017654321', 'ana.gomez@email.com', 'Carrera 45 #67-89', 'Estudiante', 2),
 ('CC', 1122334487, 'Carlos López', 'Usuario', '3023456789', 'carlos.lopez@email.com', 'Avenida 67 #12-34', 'Contador', 3),
 ('TI', 5566778894, 'Lucía Ramírez', 'Administrador', '3039876543', 'lucia.ramirez@email.com', 'Calle 89 #23-45', 'Médica', 4),
-('CC', 998877663, 'Mariana Torres', NULL, '3046543210', 'mariana.torres@email.com', 'Transversal 10 #56-78', 'Diseñadora', 4);
+('CC', 998877663, 'Mariana Torres', NULL, '3046543210', 'mariana.torres@email.com', 'Transversal 10 #56-78', 'Diseñadora', 4),
+('CC', 1000851035, 'Brian Fernando Vargas Tapias', NULL, '3046543210', 'mariana.torres@email.com', 'Transversal 10 #56-78', 'Diseñadora', 4);
+
+
+
+INSERT INTO Usuario (
+    Usu_TipoDocumento, 
+    Usu_NumeroDocumento, 
+    Usu_NombreCompleto, 
+    Usu_Rol, 
+    Usu_Telefono, 
+    Usu_CorreoElectronico, 
+    Usu_Direccion, 
+    Usu_Ocupacion, 
+    FK_ID_Manzanas
+) 
+VALUES
+('CC', 1000851035, 'Brian Fernando Vargas Tapias', NULL, '3046543210', 'mariana.torres@email.com', 'Transversal 10 #56-78', 'Diseñadora', 4);
+
 
 DELETE FROM usuario;
 
@@ -58,3 +76,9 @@ SELECT Usu_NumeroDocumento FROM Usuario WHERE Usu_NumeroDocumento IN (1234567890
 
 INSERT INTO Manzanas (Man_Nombre, Man_Direccion) VALUES
 ('Soacha', 'Calle Falsa 124'),
+
+SELECT * FROM usuario
+
+SELECT manzanas.Man_Nombre FROM manzanas INNER JOIN usuario ON usuario.FK_ID_Manzanas = manzanas.ID_Manzanas WHERE FK_ID_Manzanas = 1;
+
+SELECT * FROM Usuario WHERE ID_Usuario = 1

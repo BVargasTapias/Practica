@@ -249,6 +249,76 @@ app.delete('/eliminar-servicio/:ID', async (req, res) => {
   }
 })
 
+//Obtener Usuarios
+app.get('/usuarios', async (req, res) => {
+  const usuario = req.session.usuario;
+
+  try {
+    const conect = await mysql2.createConnection(db);
+    const [usuariosData] = await conect.execute('SELECT * FROM Usuario');
+    const usuariosGuardadosFiltrados = usuariosData.map(usuario => ({
+      Nombre: usuario.Usu_NombreCompleto,
+      IDU: usuario.ID_Usuario
+    }));
+    res.json({ usuariosGuardados: usuariosGuardadosFiltrados });
+    await conect.end();
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+
+//Modificar Usuario
+app.get('/modificar-usuario/:IDU', async (req, res) => {
+  const solicitudID = req.params.IDU;
+
+  try {
+      const conect = await mysql2.createConnection(db);
+      const [modificarData] = await conect.execute(
+          'SELECT * FROM Usuario WHERE ID_Usuario = ?',
+          [solicitudID]
+      );
+
+      const datosModificarFiltrados = modificarData.map((modificar) => ({
+          Nombre: modificar.Usu_NombreCompleto,
+          Correo: modificar.Usu_CorreoElectronico,
+          Rol: modificar.Usu_Rol,
+          Telefono: modificar.Usu_Telefono,
+          Direccion: modificar.Usu_Direccion,
+          Ocupacion: modificar.Usu_Ocupacion,
+          IDU: modificar.ID_Usuario,
+      }));
+
+      res.json({ modificarDatos: datosModificarFiltrados });
+      await conect.end();
+  } catch (error) {
+      console.error('Error en el servidor:', error);
+      res.status(500).send('Error en el servidor');
+  }
+});
+
+
+app.put('/modificar-usuario/:IDU', async (req, res) => {
+  const IDU = req.params.IDU;
+  const { nombre, correo, rol, telefono, direccion, ocupacion } = req.body;
+
+  try {
+      const conect = await mysql2.createConnection(db);
+      await conect.execute(
+          'UPDATE Usuario SET Usu_NombreCompleto = ?, Usu_CorreoElectronico = ?, Usu_Rol = ?, Usu_Telefono = ?, Usu_Direccion = ?, Usu_Ocupacion = ? WHERE ID_Usuario = ?',
+          [nombre, correo, rol, telefono, direccion, ocupacion, IDU]
+      );
+      res.status(200).send("Usuario actualizado con éxito");
+      await conect.end();
+  } catch (error) {
+      console.error('Error al actualizar el usuario:', error);
+      res.status(500).send('Error en el servidor');
+  }
+});
+
+
+
 
 // Cerrar sesion
 app.post('/cerrar-sesion', (req, res) => {
@@ -261,6 +331,7 @@ app.post('/cerrar-sesion', (req, res) => {
     }
   });
 });
+
 
 
 

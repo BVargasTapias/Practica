@@ -70,24 +70,24 @@ document.addEventListener("DOMContentLoaded", () => {
   formularioSeleccionDeServicio.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    // Recopilar servicios seleccionados
+
     const serviciosSeleccionados = Array.from(
       formularioSeleccionDeServicio.elements["servicios"]
     )
       .filter((checkbox) => checkbox.checked)
       .map((checkbox) => checkbox.value);
 
-    // Obtener fecha y hora
+  
     const fh = formularioSeleccionDeServicio.elements["fecha_hora"].value;
 
-    // Validar datos antes de enviar
+   
     if (serviciosSeleccionados.length === 0 || !fh) {
       alert("Debe seleccionar al menos un servicio y especificar una fecha y hora.");
       return;
     }
 
     try {
-      // Realizar la solicitud POST
+      
       const response = await fetch("guardar-servicios", {
         method: "POST",
         headers: {
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "lista-servicios-guardados"
   );
   btnServiciosGuardados.addEventListener("click", () => {
-   
+
     const xhrobtenerServiciosGuardados = new XMLHttpRequest();
     xhrobtenerServiciosGuardados.open(
       "post",
@@ -160,90 +160,91 @@ document.addEventListener("DOMContentLoaded", () => {
     xhrobtenerServiciosGuardados.send();
   });
 
-  
+
   // Cerrar sesion
-const btnCerrarSesion = document.getElementById("btncerrarsesion");
+  const btnCerrarSesion = document.getElementById("btncerrarsesion");
 
-btnCerrarSesion.addEventListener("click", async () => {
-  try {
-    const response = await fetch("/cerrar-sesion", {
-      method: "POST",
-    });
+  btnCerrarSesion.addEventListener("click", async () => {
+    try {
+      const response = await fetch("/cerrar-sesion", {
+        method: "POST",
+      });
 
-    if (response.ok) {
-      alert("Sesión cerrada con éxito.");
-      window.location.href = "./inicio.html"; 
-    } else {
-      alert("Error al cerrar la sesión. Intente de nuevo.");
+      if (response.ok) {
+        alert("Sesión cerrada con éxito.");
+        window.location.href = "./inicio.html";
+      } else {
+        alert("Error al cerrar la sesión. Intente de nuevo.");
+      }
+    } catch (error) {
+      console.error("Error al cerrar la sesión:", error);
+      alert("Ocurrió un error. Intente más tarde.");
     }
-  } catch (error) {
-    console.error("Error al cerrar la sesión:", error);
-    alert("Ocurrió un error. Intente más tarde.");
-  }
-});
+  });
 
+  
   
 
 });
 
-function eliminarServicio (ID) {
+function eliminarServicio(ID) {
   const xhrEliminarServicio = new XMLHttpRequest();
-    xhrEliminarServicio.open(
-      "delete",
-      `/eliminar-servicio/${ID}`, 
-      true
-    );
-    xhrEliminarServicio.setRequestHeader('Content-Type', 'application/json');
-    xhrEliminarServicio.onreadystatechange = function () {
-      if (
-        xhrEliminarServicio.readyState === 4){
-          if(xhrEliminarServicio.status === 200){
-            alert("Solicitud Eliminada");
-            window.location.reload();
-          }        
-      
-        } else {
-        console.error("Error al eliminar solicitud");
+  xhrEliminarServicio.open(
+    "delete",
+    `/eliminar-servicio/${ID}`,
+    true
+  );
+  xhrEliminarServicio.setRequestHeader('Content-Type', 'application/json');
+  xhrEliminarServicio.onreadystatechange = function () {
+    if (
+      xhrEliminarServicio.readyState === 4) {
+      if (xhrEliminarServicio.status === 200) {
+        alert("Solicitud Eliminada");
+        window.location.reload();
       }
-    };
-    xhrEliminarServicio.send();
+
+    } else {
+      console.error("Error al eliminar solicitud");
+    }
+  };
+  xhrEliminarServicio.send();
 }
 
 
 const selectManzana = document.getElementById("manzana");
 
 selectManzana.addEventListener("click", function () {
-    console.log("Se le dio click al select");
-    if (selectManzana.options.length > 1) {
-        return;  // Ya se cargaron los datos, no hacemos otra solicitud
+  console.log("Se le dio click al select");
+  if (selectManzana.options.length > 1) {
+    return; 
+  }
+
+  const xhrManzanas = new XMLHttpRequest();
+  xhrManzanas.open("post", "/manzanas", true);
+  xhrManzanas.onreadystatechange = function () {
+    if (xhrManzanas.readyState === 4) {
+      if (xhrManzanas.status === 200) {
+        const manzanas = JSON.parse(xhrManzanas.responseText);
+        console.log(manzanas);
+        selectManzana.innerHTML = "";
+
+      
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Seleccione una manzana";
+        selectManzana.appendChild(defaultOption);
+
+        manzanas.forEach((manzana) => {
+          const option = document.createElement("option");
+          option.value = manzana.ID_Manzanas;
+          option.textContent = manzana.Man_Nombre;
+          selectManzana.appendChild(option);
+        });
+      } else {
+        console.error("No se pudieron cargar las manzanas desde la base de datos");
+      }
     }
-
-    const xhrManzanas = new XMLHttpRequest();
-    xhrManzanas.open("post", "/manzanas", true);
-    xhrManzanas.onreadystatechange = function () {
-        if (xhrManzanas.readyState === 4) {
-            if (xhrManzanas.status === 200) {
-                const manzanas = JSON.parse(xhrManzanas.responseText);
-                console.log(manzanas);
-                selectManzana.innerHTML = ""; // Limpiar las opciones anteriores
-
-                // Crear un elemento de opción por cada manzana que llega
-                const defaultOption = document.createElement("option");
-                defaultOption.value = "";
-                defaultOption.textContent = "Seleccione una manzana";
-                selectManzana.appendChild(defaultOption);
-
-                manzanas.forEach((manzana) => {
-                    const option = document.createElement("option");
-                    option.value = manzana.ID_Manzanas;
-                    option.textContent = manzana.Man_Nombre;
-                    selectManzana.appendChild(option);
-                });
-            } else {
-                console.error("No se pudieron cargar las manzanas desde la base de datos");
-            }
-        }
-    };
-    xhrManzanas.send();
+  };
+  xhrManzanas.send();
 });
 
