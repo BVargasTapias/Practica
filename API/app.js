@@ -274,27 +274,34 @@ app.get('/modificar-usuario/:IDU', async (req, res) => {
   const solicitudID = req.params.IDU;
 
   try {
-      const conect = await mysql2.createConnection(db);
-      const [modificarData] = await conect.execute(
-          'SELECT * FROM Usuario WHERE ID_Usuario = ?',
-          [solicitudID]
-      );
+    const conect = await mysql2.createConnection(db);
+    const [modificarData] = await conect.execute(
+      'SELECT * FROM Usuario WHERE ID_Usuario = ?',
+      [solicitudID]
+    );
+    const [manzanaName] = await conect.execute(
+      'SELECT manzanas.Man_Nombre FROM manzanas INNER JOIN usuario ON usuario.FK_ID_Manzanas = manzanas.ID_Manzanas WHERE FK_ID_Manzanas = ?', [modificarData[0].FK_ID_Manzanas]
+    )
 
-      const datosModificarFiltrados = modificarData.map((modificar) => ({
-          Nombre: modificar.Usu_NombreCompleto,
-          Correo: modificar.Usu_CorreoElectronico,
-          Rol: modificar.Usu_Rol,
-          Telefono: modificar.Usu_Telefono,
-          Direccion: modificar.Usu_Direccion,
-          Ocupacion: modificar.Usu_Ocupacion,
-          IDU: modificar.ID_Usuario,
-      }));
+    const modificarManzana = manzanaName.map((man) => ({
+      Manzana: man.Man_Nombre
+    }))
 
-      res.json({ modificarDatos: datosModificarFiltrados });
-      await conect.end();
+    const datosModificarFiltrados = modificarData.map((modificar) => ({
+      Nombre: modificar.Usu_NombreCompleto,
+      Correo: modificar.Usu_CorreoElectronico,
+      Rol: modificar.Usu_Rol,
+      Telefono: modificar.Usu_Telefono,
+      Direccion: modificar.Usu_Direccion,
+      Ocupacion: modificar.Usu_Ocupacion,
+      IDU: modificar.ID_Usuario,
+    }));
+
+    res.json({ modificarDatos: datosModificarFiltrados, modificarManzana: modificarManzana });
+    await conect.end();
   } catch (error) {
-      console.error('Error en el servidor:', error);
-      res.status(500).send('Error en el servidor');
+    console.error('Error en el servidor:', error);
+    res.status(500).send('Error en el servidor');
   }
 });
 
@@ -302,22 +309,95 @@ app.get('/modificar-usuario/:IDU', async (req, res) => {
 app.put('/modificar-usuario/:IDU', async (req, res) => {
   const IDU = req.params.IDU;
   const { nombre, correo, rol, telefono, direccion, ocupacion } = req.body;
+  const { manzana } = req.body;
+
+  try {
+    const conect = await mysql2.createConnection(db);
+    const [Manzana] = await conect.execute('SELECT manzanas.ID_Manzanas FROM manzanas WHERE Man_Nombre = ?', [manzana])
+    //console.log(Manzana);
+    await conect.execute(
+      'UPDATE Usuario SET Usu_NombreCompleto = ?, Usu_CorreoElectronico = ?, Usu_Rol = ?, Usu_Telefono = ?, Usu_Direccion = ?, Usu_Ocupacion = ?, FK_ID_Manzanas = ? WHERE ID_Usuario = ?',
+      [nombre, correo, rol, telefono, direccion, ocupacion, Manzana[0].ID_Manzanas, IDU]
+    );
+    res.status(200).send("Usuario actualizado con éxito");
+    await conect.end();
+  } catch (error) {
+    console.error('Error al actualizar el usuario:', error);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+//Servicios
+app.get('/servicios', async (req, res) => {
+  //const usuario = req.session.usuario;
+
+  try {
+    const conect = await mysql2.createConnection(db);
+    const [serviciosData] = await conect.execute('SELECT * FROM Servicios');
+    const serviciosGuardadosFiltrados = serviciosData.map(servicios => ({
+      Nombre: servicios.Ser_Nombre,
+      Descripcion: servicios.Ser_Descripcion,
+      IDS: servicios.ID_Servicios
+    }));
+    res.json({ serviciosGuardados: serviciosGuardadosFiltrados });
+    await conect.end();
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+//Elinar Servicio en la base
+app.delete('/eliminar-servicio-base/:IDS', async (req, res) => {
+  const servicioID = req.params.IDS;
+  console.log(req.params);
+
+  try {
+    const conect = await mysql2.createConnection(db)
+    await conect.execute('DELETE FROM Servicios WHERE ID_Servicios =?', [servicioID])
+    res.send().status(200)
+    await conect.end();
+
+  } catch (error) {
+    console.error('Error al eliminar el servicio:', error);
+    res.status(500).send('Error al eliminar el servicio');
+  }
+})
+
+
+//Eliminar Usuario
+app.delete('/eliminar-usuario/:IDU', async (req, res) => {
+  const usuarioID = req.params.IDU;
+  console.log(req.params);
+
+  try {
+    const conect = await mysql2.createConnection(db)
+    await conect.execute('DELETE FROM Usuario WHERE ID_Usuario =?', [usuarioID])
+    res.send().status(200)
+    await conect.end();
+
+  } catch (error) {
+    console.error('Error al eliminar el usuario:', error);
+    res.status(500).send('Error al eliminar el usuario');
+  }
+})
+
+//crear servicio
+app.post('/crear-servicio', async (req, res) => {
+  const { nombreServicio, descripcionServicio } = req.body;
 
   try {
       const conect = await mysql2.createConnection(db);
       await conect.execute(
-          'UPDATE Usuario SET Usu_NombreCompleto = ?, Usu_CorreoElectronico = ?, Usu_Rol = ?, Usu_Telefono = ?, Usu_Direccion = ?, Usu_Ocupacion = ? WHERE ID_Usuario = ?',
-          [nombre, correo, rol, telefono, direccion, ocupacion, IDU]
+          `INSERT INTO Servicios (Ser_Nombre, Ser_Descripcion) VALUES (?, ?)`,
+          [nombreServicio, descripcionServicio]
       );
-      res.status(200).send("Usuario actualizado con éxito");
-      await conect.end();
+      res.status(200).json({ message: "Servicio agregado correctamente" });
   } catch (error) {
-      console.error('Error al actualizar el usuario:', error);
-      res.status(500).send('Error en el servidor');
+      console.error("Error al agregar servicio:", error);
+      res.status(500).json({ error: "Error al agregar servicio" });
   }
 });
-
-
 
 
 // Cerrar sesion

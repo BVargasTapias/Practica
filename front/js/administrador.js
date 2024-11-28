@@ -35,7 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
               </td>
             </tr>
             `).join('');
+                    containermodificar.style.display = "none";
+                    containerServicios.style.display = "none";
                     containerUsuarios.style.display = "block";
+                    containerCrear.style.display = "none";
                 } else {
                     console.error("Error al obtener servicios guardados");
                 }
@@ -45,13 +48,78 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-})
+
+    const btnServicios = document.getElementById("btnServicios")
+    btnServicios.addEventListener("click", () => {
+        const xhrobtenerServicios = new XMLHttpRequest();
+        xhrobtenerServicios.open("get", "/servicios", true);
+        xhrobtenerServicios.onreadystatechange = function () {
+            if (xhrobtenerServicios.readyState === 4) {
+                if (xhrobtenerServicios.status === 200) {
+                    const data = JSON.parse(xhrobtenerServicios.responseText);
+                    listaServicios.innerHTML = data.serviciosGuardados
+                        .map((servicios) => `
+                <tr>
+                  <td>${servicios.Nombre}</td>
+                  <td>${servicios.Descripcion}</td>
+                  <td>
+                    <button onclick="eliminarServicio(${servicios.IDS})">Eliminar</button>
+                  </td>
+                </tr>
+                `).join('');
+                    containerCrear.style.display = "none";
+                    containermodificar.style.display = "none";
+                    containerUsuarios.style.display = "none";
+                    containerServicios.style.display = "block";
+                } else {
+                    console.error("Error al obtener servicios guardados");
+                }
+            }
+        };
+        xhrobtenerServicios.send();
+    });
+
+    const btncrearServicios = document.getElementById("crearServicio")
+    btncrearServicios.addEventListener("click", () => {
+        containerServicios.style.display = "none";
+        containerCrear.style.display = "block";
+    });
+
+    const enviarServicio = document.getElementById("enviarServicio");
+    enviarServicio.addEventListener("click", () => {
+
+        const nombreServicio = document.getElementById("nombreServicio").value;
+        const descripcionServicio = document.getElementById("descripcionServicio").value;
+
+        const datos = {
+            nombreServicio,
+            descripcionServicio
+        };
+
+
+        const xhrenviarServicioCreado = new XMLHttpRequest();
+        xhrenviarServicioCreado.open("POST", "/crear-servicio", true);
+        xhrenviarServicioCreado.setRequestHeader("Content-Type", "application/json");
+        xhrenviarServicioCreado.onreadystatechange = function () {
+            if (xhrenviarServicioCreado.readyState === 4) {
+                if (xhrenviarServicioCreado.status === 200) {
+                    alert("Servicio agregado");
+                    window.location.reload();
+                } else {
+                    console.error("Error al guardar el servicio");
+                }
+            }
+        };
+
+        xhrenviarServicioCreado.send(JSON.stringify(datos));
+    });
+
+});
 
 function modificarUsuario(IDU) {
     const containermodificar = document.getElementById("containermodificar");
     const formModificar = document.getElementById("formModificar");
 
-    // Ocultar la lista de usuarios y mostrar el formulario de edición
     containerUsuarios.style.display = "none";
     containermodificar.style.display = "block";
 
@@ -62,16 +130,16 @@ function modificarUsuario(IDU) {
         if (xhrmodificarUsuario.readyState === 4) {
             if (xhrmodificarUsuario.status === 200) {
                 const data = JSON.parse(xhrmodificarUsuario.responseText).modificarDatos[0];
-                if (data) {
-                    // Rellenar los campos del formulario
+                const data2 = JSON.parse(xhrmodificarUsuario.responseText).modificarManzana[0];
+                if (data, data2) {
                     document.getElementById("nombre").value = data.Nombre;
                     document.getElementById("email").value = data.Correo;
                     document.getElementById("rol").value = data.Rol;
                     document.getElementById("telefono").value = data.Telefono;
                     document.getElementById("direccion").value = data.Direccion;
                     document.getElementById("ocupacion").value = data.Ocupacion;
+                    document.getElementById("manzana").value = data2.Manzana;
 
-                    // Guardar el ID del usuario en el formulario para referencia
                     formModificar.dataset.id = IDU;
                 } else {
                     console.error("No se encontraron datos para este usuario.");
@@ -97,6 +165,7 @@ document.getElementById("btnGuardarCambios").addEventListener("click", function 
         telefono: document.getElementById("telefono").value,
         direccion: document.getElementById("direccion").value,
         ocupacion: document.getElementById("ocupacion").value,
+        manzana: document.getElementById("manzana").value
     };
 
     const xhrActualizar = new XMLHttpRequest();
@@ -109,7 +178,6 @@ document.getElementById("btnGuardarCambios").addEventListener("click", function 
                 alert("Usuario actualizado con éxito");
                 containermodificar.style.display = "none";
                 containerUsuarios.style.display = "block";
-                // Puedes recargar la lista de usuarios aquí
             } else {
                 console.error("Error al actualizar los datos del usuario.");
             }
@@ -118,3 +186,50 @@ document.getElementById("btnGuardarCambios").addEventListener("click", function 
 
     xhrActualizar.send(JSON.stringify(datosActualizados));
 });
+
+
+function eliminarServicio(IDS) {
+    const xhrEliminarServicioBase = new XMLHttpRequest();
+    xhrEliminarServicioBase.open(
+        "delete",
+        `/eliminar-servicio-base/${IDS}`,
+        true
+    );
+    xhrEliminarServicioBase.setRequestHeader('Content-Type', 'application/json');
+    xhrEliminarServicioBase.onreadystatechange = function () {
+        if (
+            xhrEliminarServicioBase.readyState === 4) {
+            if (xhrEliminarServicioBase.status === 200) {
+                alert("Servicio Eliminadp");
+                window.location.reload();
+            }
+
+        } else {
+            console.error("Error al eliminar el servicio");
+        }
+    };
+    xhrEliminarServicioBase.send();
+}
+
+function eliminarUsuario(IDU) {
+    const xhrEliminarServicioBase = new XMLHttpRequest();
+    xhrEliminarServicioBase.open(
+        "delete",
+        `/eliminar-usuario/${IDU}`,
+        true
+    );
+    xhrEliminarServicioBase.setRequestHeader('Content-Type', 'application/json');
+    xhrEliminarServicioBase.onreadystatechange = function () {
+        if (
+            xhrEliminarServicioBase.readyState === 4) {
+            if (xhrEliminarServicioBase.status === 200) {
+                alert("Usuario eliminado");
+                window.location.reload();
+            }
+
+        } else {
+            console.error("Error al eliminar el servicio");
+        }
+    };
+    xhrEliminarServicioBase.send();
+}

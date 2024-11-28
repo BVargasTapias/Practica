@@ -82,3 +82,5 @@ SELECT * FROM usuario
 SELECT manzanas.Man_Nombre FROM manzanas INNER JOIN usuario ON usuario.FK_ID_Manzanas = manzanas.ID_Manzanas WHERE FK_ID_Manzanas = 1;
 
 SELECT * FROM Usuario WHERE ID_Usuario = 1
+
+SELECT manzanas.ID_Manzanas FROM manzanas WHERE Man_Nombre = "bosa"

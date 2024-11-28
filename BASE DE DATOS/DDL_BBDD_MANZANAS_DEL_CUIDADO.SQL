@@ -27,7 +27,7 @@ CREATE TABLE Servicios (
 CREATE TABLE Servicios_Manzanas (
     FK_ID_Servicios INT (10),
     FK_ID_Manzanas INT (10),
-    FOREIGN KEY (FK_ID_Servicios) REFERENCES Servicios(ID_Servicios),
+    FOREIGN KEY (FK_ID_Servicios) REFERENCES Servicios(ID_Servicios)  ON DELETE CASCADE,
     FOREIGN KEY (FK_ID_Manzanas) REFERENCES Manzanas(ID_Manzanas)
 )
 
