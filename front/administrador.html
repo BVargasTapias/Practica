@@ -106,38 +106,71 @@
 
         <div class="containerCrear" id="containerCrear" style="display: none;">
             <h2>Crear Servicio</h2>
-                <table class="form-table">
+            <table class="form-table">
 
-                    <tr>
-                        <td><label for="nombreServicio">Nombre:</label></td>
-                        <td><input type="text" id="nombreServicio" name="nombreManzana"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="descripcionServicio">Descripción:</label></td>
-                        <td><input type="text" id="descripcionServicio" name="descripcionManzana"></td>
-                    </tr>
+                <tr>
+                    <td><label for="nombreServicio">Nombre:</label></td>
+                    <td><input type="text" id="nombreServicio" name="nombreManzana"></td>
+                </tr>
+                <tr>
+                    <td><label for="descripcionServicio">Descripción:</label></td>
+                    <td><input type="text" id="descripcionServicio" name="descripcionManzana"></td>
+                </tr>
 
 
-                </table>
-                <button id="enviarServicio">Crear Servicio</button>
+            </table>
+            <button id="enviarServicio">Crear Servicio</button>
         </div>
 
 
 
         <!-- Botón para crear manzana -->
-        <button id="btnCrearManzana">Crear Manzana</button>
+        <button id="btnCrearManzana">Manzanas</button>
 
-        <div id="crearManzanaContainer" style="display: none;">
+
+        <div class="containerManzanas" id="containerManzanas" style="display: none;">
+            <h2>Gestión de Manzanas</h2>
+            <table class="form-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="listaManzanas">
+
+                </tbody>
+            </table>
+            <button id="CrearManzana">Crear Manzana</button>
+        </div>
+
+        <div class="containerCrearManzana" id="containerCrearManzana" style="display: none;">
             <h2>Crear Manzana</h2>
-            <form id="formularioCrearManzana">
-                <label for="nombreManzana">Nombre de la Manzana:</label>
-                <input type="text" id="nombreManzana">
+            <table class="form-table">
 
-                <label for="ubicacion">Ubicación:</label>
-                <input type="text" id="ubicacion">
+                <tr>
+                    <td><label for="nombreManzana">Nombre:</label></td>
+                    <td><input type="text" id="nombreManzana" name="nombreManzana"></td>
+                </tr>
+                <tr>
+                    <td><label for="ubicacionManzana">Ubicacion:</label></td>
+                    <td><input type="text" id="ubicacionManzana" name="ubicacionManzana"></td>
+                </tr>
 
-                <button type="submit" id="guardarManzana">Guardar Manzana</button>
-            </form>
+            </table>
+            <button id="enviarManzana">Enviar Manzana</button>
+        </div>
+
+        <div class="agregarServicio" id="agregarServicio" style="display: none;">
+            <table class="form-table">
+                <tr>
+                    <td  id="tablaServicios">Tabla de servicios</td>
+                </tr>
+                <tr>
+                    <td id="listaServicios2">Lista de Servicios</td>
+                </tr>
+            </table>
+            <button type="submit" id="servicioAgregado">Aregar Servicios</button>
         </div>
 
         <!-- Botón para cerrar sesión -->
